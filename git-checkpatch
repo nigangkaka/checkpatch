@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/bin/bash
 
 readonly CHECKPATCH="/usr/local/bin/checkpatch.pl"
 
@@ -38,8 +38,15 @@ checkpatch() {
 	patch=$(git format-patch -1 "$1" -o ${DEFAULT_PATCH_OUT})
 
         if [ -n "${patch}" ];then
+		echo ""
+		echo "-------- Check Commit --------------"
 		git show --oneline --no-patch "$1"
-		${CHECKPATCH} ${CHECKPATCH_FLAGS}  ${patch}
+		echo "------------------------------------"
+		echo ""
+		echo ""
+
+		perl ${CHECKPATCH} ${CHECKPATCH_FLAGS}  ${patch}
+		echo ""
 	else
 		echo "Current directory is not a valid git repository"
 		exit 1
@@ -53,7 +60,6 @@ DEFAULT_PATCH_OUT='./KAKAZZCR_PATCH'
 rm -rf ${DEFAULT_PATCH_OUT}
 mkdir -p ${DEFAULT_PATCH_OUT}
 
-# checkpatch
 checkpatch "${COMMIT}"
 
 rm -rf ${DEFAULT_PATCH_OUT}
