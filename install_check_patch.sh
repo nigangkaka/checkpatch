@@ -4,7 +4,29 @@
 #
 # Use this script to fetch the latest checkpatch.pl from GitHub
 
+get_system(){
+	local linux=$(uname -a |grep "^Linux" -o)
+	if [[ -n "${linux}" ]]; then
+		echo ${linux}
+	fi
+
+	local cygwin=$(uname -a| grep "^CYGWIN" -o)
+	if [[ -n "${cygwin}" ]]; then
+		echo ${cygwin}
+	fi
+
+	local MINGW=$(uname -a| grep "^MINGW" -o)
+	if [[ -n "${MINGW}" ]]; then
+		echo ${MINGW}
+	fi
+}
+
+
 TEMP="/tmp/install_check_patch/"
+
+SYSTEM=$(get_system)
+
+echo ${SYSTEM}
 
 readonly CHECKPATCH_SCRIPT="checkpatch.pl"
 readonly SPELLING_TXT="spelling.txt"
@@ -33,7 +55,15 @@ for download in "${CHECKPATCH_URL}:${CHECKPATCH_SCRIPT}"\
 	curl -f "${download%:*}" -s -S -O || \
 		exit 1
 	chmod 755 ${download##*:}
-	sudo cp ${download##*:} /usr/local/bin/
+
+	if [[ "${SYSTEM}" == "CYGWIN" ]]; then
+		cp ${download##*:} /usr/local/bin/
+	elif [[ "${SYSTEM}" == "MINGW" ]]; then
+		cp ${download##*:} ${HOME}/bin
+	else
+		sudo cp ${download##*:} /usr/local/bin/
+	fi
+
 done
 
 popd

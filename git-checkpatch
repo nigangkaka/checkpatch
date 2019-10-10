@@ -1,6 +1,10 @@
 #!/bin/bash
 
-readonly CHECKPATCH="/usr/local/bin/checkpatch.pl"
+CHECKPATCH="/usr/local/bin/checkpatch.pl"
+
+if [[ ! -e ${CHECKPATCH} ]]; then
+	CHECKPATCH=${HOME}/bin/checkpatch.pl
+fi
 
 if [ ! -x "${CHECKPATCH}" ]; then
 	echo "cannot execute '${CHECKPATCH}'"
@@ -9,8 +13,8 @@ fi
 
 CHECKPATCH_FLAGS+=" --no-tree"
 CHECKPATCH_FLAGS+=" --ignore GERRIT_CHANGE_ID"
-#CHECKPATCH_FLAGS+=" --ignore COMPLEX_MACRO"
-#CHECKPATCH_FLAGS+=" --ignore TRAILING_SEMICOLON"
+CHECKPATCH_FLAGS+=" --ignore COMPLEX_MACRO"
+CHECKPATCH_FLAGS+=" --ignore TRAILING_SEMICOLON"
 #CHECKPATCH_FLAGS+=" --ignore LONG_LINE"
 #CHECKPATCH_FLAGS+=" --ignore LONG_LINE_STRING"
 #CHECKPATCH_FLAGS+=" --ignore LONG_LINE_COMMENT"
@@ -35,7 +39,11 @@ CHECKPATCH_FLAGS+=" --ignore MISSING_SIGN_OFF"
 # readonly CHECKPATCH_EXCLUDE=$(for p in ${CHECKPATCH_IGNORE}; do echo ":(exclude)${p}" ; done)
 
 checkpatch() {
+	if [-n "$2" ];then
+	patch=$(git format-patch -1 "$1" -- "$2" -o ${DEFAULT_PATCH_OUT})
+	else
 	patch=$(git format-patch -1 "$1" -o ${DEFAULT_PATCH_OUT})
+	fi
 
         if [ -n "${patch}" ];then
 		echo ""
@@ -60,6 +68,6 @@ DEFAULT_PATCH_OUT='./KAKAZZCR_PATCH'
 rm -rf ${DEFAULT_PATCH_OUT}
 mkdir -p ${DEFAULT_PATCH_OUT}
 
-checkpatch "${COMMIT}"
+checkpatch "${COMMIT}" $2
 
 rm -rf ${DEFAULT_PATCH_OUT}
