@@ -33,13 +33,14 @@ CHECKPATCH_FLAGS+=" --ignore MISSING_SIGN_OFF"
 #CHECKPATCH_FLAGS+=" --ignore EXECUTE_PERMISSIONS"
 #CHECKPATCH_FLAGS+=" --ignore MULTISTATEMENT_MACRO_USE_DO_WHILE"
 #CHECKPATCH_FLAGS+=" --ignore STORAGE_CLASS"
+CHECKPATCH_FLAGS+=" --ignore SPDX_LICENSE_TAG"
 
 # checkpatch.pl will ignore the following paths
 # readonly CHECKPATCH_IGNORE+=" Makefile"
 # readonly CHECKPATCH_EXCLUDE=$(for p in ${CHECKPATCH_IGNORE}; do echo ":(exclude)${p}" ; done)
 
 checkpatch() {
-	if [-n "$2" ];then
+	if [ -n "$2" ];then
 	patch=$(git format-patch -1 "$1" -- "$2" -o ${DEFAULT_PATCH_OUT})
 	else
 	patch=$(git format-patch -1 "$1" -o ${DEFAULT_PATCH_OUT})
@@ -56,8 +57,8 @@ checkpatch() {
 		perl ${CHECKPATCH} ${CHECKPATCH_FLAGS}  ${patch}
 		echo ""
 	else
-		echo "Current directory is not a valid git repository"
-		exit 1
+		echo "Not Patch Generated"
+		exit 0
         fi
 }
 
