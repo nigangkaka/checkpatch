@@ -34,7 +34,7 @@ CHECKPATCH_FLAGS+=" --ignore MISSING_SIGN_OFF"
 #CHECKPATCH_FLAGS+=" --ignore MULTISTATEMENT_MACRO_USE_DO_WHILE"
 #CHECKPATCH_FLAGS+=" --ignore STORAGE_CLASS"
 CHECKPATCH_FLAGS+=" --ignore SPDX_LICENSE_TAG"
-
+CHECKPATCH_FLAGS+=" --ignore PRINTK_WITHOUT_KERN_LEVEL"
 # checkpatch.pl will ignore the following paths
 # readonly CHECKPATCH_IGNORE+=" Makefile"
 # readonly CHECKPATCH_EXCLUDE=$(for p in ${CHECKPATCH_IGNORE}; do echo ":(exclude)${p}" ; done)
