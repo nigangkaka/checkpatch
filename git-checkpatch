@@ -16,8 +16,8 @@ CHECKPATCH_FLAGS+=" --ignore GERRIT_CHANGE_ID"
 CHECKPATCH_FLAGS+=" --ignore COMPLEX_MACRO"
 CHECKPATCH_FLAGS+=" --ignore TRAILING_SEMICOLON"
 #CHECKPATCH_FLAGS+=" --ignore LONG_LINE"
-#CHECKPATCH_FLAGS+=" --ignore LONG_LINE_STRING"
-#CHECKPATCH_FLAGS+=" --ignore LONG_LINE_COMMENT"
+CHECKPATCH_FLAGS+=" --ignore LONG_LINE_STRING"
+CHECKPATCH_FLAGS+=" --ignore LONG_LINE_COMMENT"
 #CHECKPATCH_FLAGS+=" --ignore SYMBOLIC_PERMS"
 #CHECKPATCH_FLAGS+=" --ignore NEW_TYPEDEFS"
 #CHECKPATCH_FLAGS+=" --ignore SPLIT_STRING"
@@ -35,15 +35,16 @@ CHECKPATCH_FLAGS+=" --ignore MISSING_SIGN_OFF"
 #CHECKPATCH_FLAGS+=" --ignore STORAGE_CLASS"
 CHECKPATCH_FLAGS+=" --ignore SPDX_LICENSE_TAG"
 CHECKPATCH_FLAGS+=" --ignore PRINTK_WITHOUT_KERN_LEVEL"
+CHECKPATCH_FLAGS+=" --ignore DATE_TIME"
 # checkpatch.pl will ignore the following paths
 # readonly CHECKPATCH_IGNORE+=" Makefile"
 # readonly CHECKPATCH_EXCLUDE=$(for p in ${CHECKPATCH_IGNORE}; do echo ":(exclude)${p}" ; done)
 
 checkpatch() {
 	if [ -n "$2" ];then
-	patch=$(git format-patch -1 "$1" -- "$2" -o ${DEFAULT_PATCH_OUT})
+		patch=$(git format-patch -1 "$1" -o ${DEFAULT_PATCH_OUT} -- "$2")
 	else
-	patch=$(git format-patch -1 "$1" -o ${DEFAULT_PATCH_OUT})
+		patch=$(git format-patch -1 "$1" -o ${DEFAULT_PATCH_OUT})
 	fi
 
         if [ -n "${patch}" ];then
